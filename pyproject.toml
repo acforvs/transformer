@@ -7,6 +7,7 @@ authors = ["acforvs <'vlad.al.savinov@gmail.com'>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 torch = "^1.12.0"
+numpy = "^1.23.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

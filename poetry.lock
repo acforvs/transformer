@@ -37,6 +37,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "numpy"
+version = "1.23.1"
+description = "NumPy is the fundamental package for array computing with Python."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -129,7 +137,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "d5accb47c7bbec128112135888ad5d68ccd12f647781447b66e005db29554eee"
+content-hash = "f384f6dfcf2bd58eb49cee7233f3c172c1f3c443c7de59c15bd3981213e33c3c"
 
 [metadata.files]
 atomicwrites = [
@@ -148,6 +156,7 @@ more-itertools = [
     {file = "more-itertools-8.13.0.tar.gz", hash = "sha256:a42901a0a5b169d925f6f217cd5a190e32ef54360905b9c39ee7db5313bfec0f"},
     {file = "more_itertools-8.13.0-py3-none-any.whl", hash = "sha256:c5122bffc5f104d37c1626b8615b511f3427aa5389b94d61e5ef8236bfbc3ddb"},
 ]
+numpy = []
 packaging = []
 pluggy = []
 py = [

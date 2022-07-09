@@ -3,6 +3,7 @@ import copy
 from torch import nn
 
 from helpers import get_deep_clones
+from attention import MultiHeadedAttention
 
 
 class SublayerConnection(nn.Module):
@@ -35,7 +36,7 @@ class EncoderLayer(nn.Module):
     and the second is a simple, positionwise fully connected feed-forward network
     """
 
-    def __init__(self, dim, multi_head_attn, feed_forward_nn, p_dropout=0.1):
+    def __init__(self, dim: int, multi_head_attn: MultiHeadedAttention, feed_forward_nn, p_dropout=0.1):
         super(EncoderLayer, self).__init__()
         self.dim = dim
         self.sublayers = get_deep_clones(
@@ -58,7 +59,7 @@ class Encoder(nn.Module):
     """ The encoder is composed of a stack of N = 6 identical layers.
     """
 
-    def __init__(self, layer, num_layers=6):
+    def __init__(self, layer: EncoderLayer, num_layers=6):
         super(Encoder, self).__init__()
         self.layers = get_deep_clones(layer, num_layers)
         self.norm = nn.LayerNorm(layer.dim)
@@ -78,7 +79,7 @@ class DecoderLayer(nn.Module):
     attention over the output of the encoder stack.
     """
 
-    def __init__(self, dim, multi_head_attn, feed_forward_nn, p_dropout=0.1):
+    def __init__(self, dim: int, multi_head_attn: MultiHeadedAttention, feed_forward_nn, p_dropout=0.1):
         super(DecoderLayer, self).__init__()
         self.dim = dim
         self.sublayers = get_deep_clones(
@@ -107,7 +108,7 @@ class Decoder(nn.Module):
     """ The decoder is also composed of a stack of N = 6 identical layers.
     """
 
-    def __init__(self, layer, num_layers=6):
+    def __init__(self, layer: DecoderLayer, num_layers=6):
         super(Decoder, self).__init__()
         self.layers = get_deep_clones(layer, num_layers)
         self.norm = nn.LayerNorm(layer.dim)
