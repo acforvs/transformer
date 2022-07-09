@@ -4,6 +4,7 @@ from torch import nn
 
 from helpers import get_deep_clones
 from attention import MultiHeadedAttention
+from feedforward import PositionWiseFeedForwardNN
 
 
 class SublayerConnection(nn.Module):
@@ -14,7 +15,7 @@ class SublayerConnection(nn.Module):
     P_drop = 0.1.
     """
 
-    def __init__(self, dim, p_dropout=0.1):
+    def __init__(self, dim: int, p_dropout=0.1):
         super(SublayerConnection, self).__init__()
         self.dropout = nn.Dropout(p=p_dropout)
         self.norm = nn.LayerNorm(dim)
@@ -36,7 +37,10 @@ class EncoderLayer(nn.Module):
     and the second is a simple, positionwise fully connected feed-forward network
     """
 
-    def __init__(self, dim: int, multi_head_attn: MultiHeadedAttention, feed_forward_nn, p_dropout=0.1):
+    def __init__(
+            self, dim: int, multi_head_attn: MultiHeadedAttention,
+            feed_forward_nn: PositionWiseFeedForwardNN, p_dropout=0.1,
+    ):
         super(EncoderLayer, self).__init__()
         self.dim = dim
         self.sublayers = get_deep_clones(
@@ -79,7 +83,10 @@ class DecoderLayer(nn.Module):
     attention over the output of the encoder stack.
     """
 
-    def __init__(self, dim: int, multi_head_attn: MultiHeadedAttention, feed_forward_nn, p_dropout=0.1):
+    def __init__(
+            self, dim: int, multi_head_attn: MultiHeadedAttention,
+            feed_forward_nn: PositionWiseFeedForwardNN, p_dropout=0.1
+    ):
         super(DecoderLayer, self).__init__()
         self.dim = dim
         self.sublayers = get_deep_clones(
