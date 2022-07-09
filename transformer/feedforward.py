@@ -8,11 +8,12 @@ class PositionWiseFeedForwardNN(nn.Module):
     While the linear transformations are the same across different positions, they use different parameters
     from layer to layer.
     """
-    def __init__(self, dim: int, inner_scaler=4, p_dropout=None):
+
+    def __init__(self, d_model: int, inner_scaler=4, p_dropout=None):
         super(PositionWiseFeedForwardNN, self).__init__()
-        d_inner = dim * inner_scaler
-        self.w1 = nn.Linear(dim, d_inner)
-        self.w2 = nn.Linear(d_inner, dim)
+        d_inner = d_model * inner_scaler
+        self.w1 = nn.Linear(d_model, d_inner)
+        self.w2 = nn.Linear(d_inner, d_model)
         self.dropout = nn.Dropout(p=p_dropout) if p_dropout else None
         self.relu = nn.ReLU()
 

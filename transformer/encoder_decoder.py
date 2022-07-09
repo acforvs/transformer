@@ -15,10 +15,10 @@ class SublayerConnection(nn.Module):
     P_drop = 0.1.
     """
 
-    def __init__(self, dim: int, p_dropout=0.1):
+    def __init__(self, d_model: int, p_dropout=0.1):
         super(SublayerConnection, self).__init__()
         self.dropout = nn.Dropout(p=p_dropout)
-        self.norm = nn.LayerNorm(dim)
+        self.norm = nn.LayerNorm(d_model)
 
     def forward(self, x, sublayer):
         """ http://nlp.seas.harvard.edu/2018/04/03/attention.html
@@ -38,13 +38,13 @@ class EncoderLayer(nn.Module):
     """
 
     def __init__(
-            self, dim: int, multi_head_attn: MultiHeadedAttention,
+            self, d_model: int, multi_head_attn: MultiHeadedAttention,
             feed_forward_nn: PositionWiseFeedForwardNN, p_dropout=0.1,
     ):
         super(EncoderLayer, self).__init__()
-        self.dim = dim
+        self.dim = d_model
         self.sublayers = get_deep_clones(
-            SublayerConnection(dim, p_dropout),
+            SublayerConnection(d_model, p_dropout),
             2,  # num_sublayers
         )
         self.multi_head_attn = multi_head_attn
@@ -84,13 +84,13 @@ class DecoderLayer(nn.Module):
     """
 
     def __init__(
-            self, dim: int, multi_head_attn: MultiHeadedAttention,
+            self, d_model: int, multi_head_attn: MultiHeadedAttention,
             feed_forward_nn: PositionWiseFeedForwardNN, p_dropout=0.1
     ):
         super(DecoderLayer, self).__init__()
-        self.dim = dim
+        self.dim = d_model
         self.sublayers = get_deep_clones(
-            SublayerConnection(dim, p_dropout),
+            SublayerConnection(d_model, p_dropout),
             3,  # num_sublayers
         )
         self.multi_head_attn = copy.deepcopy(multi_head_attn)

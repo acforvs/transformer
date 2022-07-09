@@ -12,16 +12,17 @@ class MultiHeadedAttention(nn.Module):
     https://arxiv.org/pdf/1706.03762.pdf see pages 4 and 5
     We use d_k = d_v = d_model / h
     """
-    def __init__(self, model_dim, n_heads, p_dropout=0.1, save_attn_weights=False):
+
+    def __init__(self, d_model, n_heads, p_dropout=0.1, save_attn_weights=False):
         super(MultiHeadedAttention, self).__init__()
-        assert model_dim % n_heads == 0
-        self.d_k = model_dim // n_heads
+        assert d_model % n_heads == 0
+        self.d_k = d_model // n_heads
         self.n_heads = n_heads
         # one net for each of query, key and value
         self.qkv_nns = get_deep_clones(
-            nn.Linear(model_dim, model_dim), 3
+            nn.Linear(d_model, d_model), 3
         )
-        self.out_nn = nn.Linear(model_dim, model_dim)
+        self.out_nn = nn.Linear(d_model, d_model)
         self.dropout = nn.Dropout(p=p_dropout)
         self.softmax = nn.Softmax(dim=-1)
         self.save_attn_weights = save_attn_weights
@@ -40,7 +41,8 @@ class MultiHeadedAttention(nn.Module):
 
     def forward(self, query, key, value, mask):
         n_batches = query.shape[0]
-        # reshaping a tensor from (n_batches, tokens len, n_heads * d_k) to (n_batches, tokens len, n_heads, d_k) to
+        # reshaping a tensor from (n_batches, tokens len, d_model) = (n_batches, tokens len, n_heads * d_k) to
+        #   (n_batches, tokens len, n_heads, d_k) to
         #   (n_batches, n_heads, tokens len, d_k) which is the shape for an input tensor for self._attention
         query, key, value = [
             qkv_nn(x).view(n_batches, -1, self.n_heads, self.d_k).transpose(1, 2)
