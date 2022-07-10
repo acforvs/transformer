@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import numpy as np
 
-from helpers import get_deep_clones
+from transformer.model.helpers import get_deep_clones
 
 
 class MultiHeadedAttention(nn.Module):

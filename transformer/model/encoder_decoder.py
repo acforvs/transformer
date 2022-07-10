@@ -2,9 +2,9 @@ import copy
 
 from torch import nn
 
-from helpers import get_deep_clones
-from attention import MultiHeadedAttention
-from feedforward import PositionWiseFeedForwardNN
+from transformer.model.helpers import get_deep_clones
+from transformer.model.attention import MultiHeadedAttention
+from transformer.model.feedforward import PositionWiseFeedForwardNN
 
 
 class SublayerConnection(nn.Module):
@@ -76,7 +76,6 @@ class Encoder(nn.Module):
 
 # ========== DECODER GOES HERE ==========
 
-
 class DecoderLayer(nn.Module):
     """ In addition to the two sub-layers in each encoder layer,
     the decoder inserts a third sub-layer, which performs multi-head
@@ -99,6 +98,7 @@ class DecoderLayer(nn.Module):
         self.feed_forward_nn = feed_forward_nn
 
     def forward(self, x, memory, inp_mask, out_mask):
+        # memory will be an output of the encoder later on
         mem = memory
         sublayer_1, sublayer_2, sublayer_3 = self.sublayers
         x = sublayer_1(
@@ -124,3 +124,15 @@ class Decoder(nn.Module):
         for layer in self.layers:
             x = layer(x, memory, inp_mask, out_mask)
         return self.norm(x)
+
+
+class DecoderGenerator(nn.Module):
+    def __init__(self, d_model: int, d_vocab: int):
+        super(DecoderGenerator, self).__init__()
+        self.feed_forward = nn.Sequential(
+            nn.Linear(d_model, d_vocab),
+            nn.LogSoftmax(dim=-1)
+        )
+
+    def forward(self, x):
+        return self.feed_forward(x)
