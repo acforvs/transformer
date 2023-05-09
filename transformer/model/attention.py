@@ -32,7 +32,7 @@ class MultiHeadedAttention(nn.Module):
         # shape is (n_batches, n_heads, tokens len, d_k)
         scores = torch.matmul(query, torch.transpose(key, -2, -1)) / np.sqrt(self.d_k)
         if mask is not None:
-            scores.masked_fill(mask == 0, -np.inf)
+            scores.masked_fill_(mask == 0, -np.inf)
         ps = self.softmax(scores)
         # dropout is not used in the original paper, see page 4, figure 2 (left)
         # https://arxiv.org/pdf/1706.03762.pdf
